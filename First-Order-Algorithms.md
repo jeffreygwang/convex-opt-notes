@@ -70,10 +70,10 @@ There are a few different error metrics we might care about:
 - $\|x^{(k)} - x^*\|_2^2$
 
 We use the second metric. We care about **convergence** and **speed of convergence**. We define the speed of convergence of error $e_k$ as:
-- Sub-linear: $\lim _{k \rightarrow \infty} \frac{e_{k+1}}{e_k}=1 \quad$ e.g. $e_k=\frac{1}{k^c} \quad c>0$
-- Linear: $\lim _{k \rightarrow \infty} \frac{e_{k+1}}{e_k}=\beta \in(0,1)$ e.g. $e_k=\beta^k$
-- Super-linear: $\lim _{k \rightarrow \infty} \frac{e_{k+1}}{e_k}=0 \quad$ e.g. $e_k=\frac{1}{k}^k$
-- Super-linear of order $\mathrm{d}: \lim _{k \rightarrow \infty} \frac{e_{k+1}}{e_k^d}=\beta \in(0,1) \quad$ e.g. $e_k=\beta^{d^k} \quad d>1$
+- Sub-linear: $\lim_{k \rightarrow \infty} \frac{e_{k+1}}{e_k}=1 \quad$ e.g. $e_k=\frac{1}{k^c} \quad c>0$
+- Linear: $\lim_{k \rightarrow \infty} \frac{e_{k+1}}{e_k}=\beta \in(0,1)$ e.g. $e_k=\beta^k$
+- Super-linear: $\lim_{k \rightarrow \infty} \frac{e_{k+1}}{e_k}=0 \quad$ e.g. $e_k=\frac{1}{k}^k$
+- Super-linear of order $\mathrm{d}: \lim_{k \rightarrow \infty} \frac{e_{k+1}}{e_k^d}=\beta \in(0,1) \quad$ e.g. $e_k=\beta^{d^k} \quad d>1$
 
 **Remark**. For getting $\epsilon=2^{-8}$ close to a solution, a sub-linear algorithm with $e_k=\frac{1}{\sqrt{k}}$ would run for $\frac{1}{\epsilon^2}=2^{16}=65536$ iterations while a super-linear algorithm with $e_k=\frac{1}{2}^{2^k}$ will halt in $\log \log \frac{1}{\epsilon}=3$ iterations.
 
@@ -115,7 +115,7 @@ where the second equality follows by the fact that $\|x\|_2^2 = \langle x, x\ran
 **A useful trick.** $\|y+z\|^2 = \|y\|^2 + 2 \langle y, z \rangle + \|z\|^2$. (Completing the square)
 
 This proof just uses convexity and $M$-smoothness of the function. Notice that 
-$$f \text{ convex } \implies f(x^*) \geq f(x_k) + \left\langle \nabla f(x_k), x^*-x_k \right\rangle$$
+$$f \text{convex} \implies f(x^*) \geq f(x_k) + \left\langle \nabla f(x_k), x^*-x_k \right\rangle$$
 and that
 $$M\text{-Smooth} \Rightarrow \text{Descent Lemma} \Leftrightarrow f(x_{k+1}) \leq f(x_k) - \frac{t}{2} \| \nabla f(x_k) \|^2$$
 We can subtract the convexity FOC from the descent lemma to get: 
