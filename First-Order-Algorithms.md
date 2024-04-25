@@ -270,7 +270,8 @@ $$
 - For fixed step size $t$, $\lim_{k \to \infty} f(x^{(k)}) \leq f^* + G^2 t/2$ 
 - For diminishing step sizes, $\lim_{k \to \infty} f(x^{(k)}) = f^*$ 
 
-**Law of Parallelogram**$$ \| \mathbf{a} - \mathbf{b} \|_2^2 = \| \mathbf{a} \|_2^2 + \| \mathbf{b} \|_2^2 - 2\langle \mathbf{a}, \mathbf{b} \rangle $$
+**Law of Parallelogram**
+$$\| \mathbf{a} - \mathbf{b} \|_2^2 = \| \mathbf{a} \|_2^2 + \| \mathbf{b} \|_2^2 - 2\langle \mathbf{a}, \mathbf{b} \rangle$$
 **Convergence Analysis**. A key inequality, which we state and then prove right below: $$\begin{align} \| x^{(k)} - x^* \|_2^2 &\leq \| x^{(k-1)} - x^* \|_2^2 - 2t_k\left( f(x^{(k-1)}) - f(x^*) \right) + t_k^2 \| g^{(k-1)} \|_2^2 \\ &= \left\| x^{(k-1)} - t_k g^{(k-1)} - x^* \right\|_2^2 \; \; \; \text{since $x^{(k)}=x^{(k-1)}-t_kg^{(k-1)}$ }\\ &= \left\| \left( x^{(k-1)} - x^* \right) - t_k g^{(k-1)} \right\|_2^2 \\ &= \| x^{(k-1)} - x^* \|_2^2 - 2 t_k (g^{(k-1)})^T (x^{(k-1)} - x^*)  + t_k^2 \| g^{(k-1)} \|_2^2\end{align}$$
 for $g \in \partial f^{(k-1)}(x)$. Here, we've written out some math by the law of the parallelogram and expanding out $x^{(k)}$ by the algorithm step. Next, we use the defn of subgradient. 
 $$\begin{align}f(x^*) &\geq f(x^{(k-1)}) + (g^{(k-1)})^T (x^* - x^{(k-1)}) \\ (g^{(k-1)})^T (x^* - x^{(k-1)} ) &\leq f(x^*) - f(x^{(k-1)}) \end{align}$$
