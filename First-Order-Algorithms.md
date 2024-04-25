@@ -1,5 +1,8 @@
-
 ### Class 7. Gradient Descent. 
+
+<!-- $
+\renewcommand{\\|}{}
+$ -->
 
 We start with the simplest problem: unconstrained convex optimization where the objective function is also differentiable. 
 
@@ -9,7 +12,7 @@ The **gradient descent** algorithm is: choosing an initial point $x^{(0)}$ and t
 $$x^{(k)} = x^{(k-1)} - t_k \cdot \nabla f(x^{(k-1)})$$
 where $t_k$ is parameterized by the step number. At some point, stop. 
 
-**Theorem**. Suppose $f$ is $M$-smooth and $\eta = t^{(k)} < \frac{1}{M}$ for all step sizes $k$. We then have that for optimal point $x^*$, $f(x^*) - f(x) \leq \frac{\|x^{(0)} - x^*\|_2^2}{2 \eta T}$. 
+**Theorem**. Suppose $f$ is $M$-smooth and $\eta = t^{(k)} < \frac{1}{M}$ for all step sizes $k$. We then have that for optimal point $x^*$, $f(x^*) - f(x) \leq \frac{\\|x^{(0)} - x^*\\|_2^2}{2 \eta T}$. 
 
 This means that subject to the smoothness and step conditions, we get $\epsilon$-close to the optimal in $O(1/\epsilon)$ steps. This is proved next class. 
 
@@ -31,7 +34,7 @@ Here, we show that one step of GD is equivalent to minimizing a simplified secon
 Our goal in a GD step is to "take a step toward a minima." It may be unclear why GD is a principled way of doing this; we show here that one step in GD is equivalent to minimizing a simplified second-order Taylor Approximation of the function. 
 
 Suppose right now that $x = x^{(k)}$, the $x$ position we have after $k$ steps of GD. And suppose we say the Hessian is just $\frac{1}{t} I$ where $I$ is the $n \times n$ identity matrix and $t$ is the step num. Then, let's define a new function 
-$$g(y) = f(x) + \nabla f(x)^T (y-x) + \frac{1}{2t} \|y-x\|_2^2$$
+$$g(y) = f(x) + \nabla f(x)^T (y-x) + \frac{1}{2t} \\|y-x\\|_2^2$$
 This function is easy to minimize, since $\nabla g(y) = \nabla f(x) + \frac{1}{t}(y-x)$ which when set to 0 gives us analytically that 
 $$\nabla f(x) + \frac{1}{t}(y^* - x) = 0 \iff y^* = x - t \nabla f(x)$$
 Thus, we have that the minimum of this simplified function $y^* = x^{(k+1)}$. And we go: 
@@ -55,19 +58,19 @@ Notice that the inside is an affine function of $s$, so this is still a convex f
 **Backtracking line search.** 
 - First, fix $0 < \beta < 1$ and $0 < \alpha \leq 1/2$. 
 - **The Algorithm**: ![backtracking line search algorithm](./imgs/backtrack-line-search-algo.png)
-- Consider the direction of steepest descent: $-\nabla f$. We have that the second term in the `while` loop is $\alpha t \nabla f(x)^T \nabla f(x) = \alpha t \| \nabla f(x) \|_2^2$. This justifies the algorithm provided in class, which was:  
-	- at each iteration, starting with $t = t_{init}$. While $f(x - t \nabla f(x)) > f(x) - \alpha t \|\nabla f(x) \|_2^2$, shrink $t = \beta t$. O/w just perform the GD update. Usually set $\alpha=\frac{1}{2}$. 
+- Consider the direction of steepest descent: $-\nabla f$. We have that the second term in the `while` loop is $\alpha t \nabla f(x)^T \nabla f(x) = \alpha t \\| \nabla f(x) \\|_2^2$. This justifies the algorithm provided in class, which was:  
+	- at each iteration, starting with $t = t_{init}$. While $f(x - t \nabla f(x)) > f(x) - \alpha t \\|\nabla f(x) \\|_2^2$, shrink $t = \beta t$. O/w just perform the GD update. Usually set $\alpha=\frac{1}{2}$. 
 - The intuition of this method is that the function's step needs to be small enough for the step size to cause it to decrease (at all).
 
-Visually, we have that $f(x) - \alpha t \| \nabla f(x) \|_2^2$ is the second line below. The first line is just the line of steepest descent. In our gradient update, if we overshoot, then we'll be above the second line, in which case we decrease our step size.  
+Visually, we have that $f(x) - \alpha t \\| \nabla f(x) \\|_2^2$ is the second line below. The first line is just the line of steepest descent. In our gradient update, if we overshoot, then we'll be above the second line, in which case we decrease our step size.  
 ![backtrack line search illustration](./imgs/backtrack-line-search-illustration.png)
 
 ### Class 8. GD. Convergence, Lipschitz Smoothness.
 
 There are a few different error metrics we might care about:
-- $\|f(x^{(k)}) - f^*\|_2^2$ 
+- $\\|f(x^{(k)}) - f^*\\|_2^2$ 
 - $f(x^{(k)}) - f^*$ 
-- $\|x^{(k)} - x^*\|_2^2$
+- $\\|x^{(k)} - x^*\\|_2^2$
 
 We use the second metric. We care about **convergence** and **speed of convergence**. We define the speed of convergence of error $e_k$ as:
 - Sub-linear: $\lim_{k \rightarrow \infty} \frac{e_{k+1}}{e_k}=1 \quad$ e.g. $e_k=\frac{1}{k^c} \quad c>0$
@@ -77,7 +80,7 @@ We use the second metric. We care about **convergence** and **speed of convergen
 
 **Remark**. For getting $\epsilon=2^{-8}$ close to a solution, a sub-linear algorithm with $e_k=\frac{1}{\sqrt{k}}$ would run for $\frac{1}{\epsilon^2}=2^{16}=65536$ iterations while a super-linear algorithm with $e_k=\frac{1}{2}^{2^k}$ will halt in $\log \log \frac{1}{\epsilon}=3$ iterations.
 
-**Definition. Lipschitz Continuity.** If $X$ and $Y$ are Euclidean spaces, with $f: X \to Y$, then $f$ is $L$-Lipschitz continuous if $\| f(y)-f(x)\| \leq L\|y-x\|$.
+**Definition. Lipschitz Continuity.** If $X$ and $Y$ are Euclidean spaces, with $f: X \to Y$, then $f$ is $L$-Lipschitz continuous if $\\| f(y)-f(x)\\| \leq L\\|y-x\\|$.
 
 **Some fun facts.**
 1. Note that differentiable at $x$ $\implies$ Lipschitz continuous at $x$ $\implies$ continuous at $x$. [Source](https://users.wpi.edu/~walker/MA500/HANDOUTS/LipschitzContinuity.pdf).
@@ -86,9 +89,9 @@ We use the second metric. We care about **convergence** and **speed of convergen
 **A motivating question.** What if the gradient of $f$ is actually a function? What if the gradient mapping of $f$ is itself a Lipschitz-continuous function? 
 
 **Definition. Lipschitz Smoothness.** Lipschitz smoothness says that the gradient is Lipschitz continuous. In particular, if $f$ is M-smooth, then $\nabla f$ is $M$-Lipschitz. There are many equivalent notions, including:
-- $\forall x, y \in X$, we have that $f(y) \leq f(x) + \langle \nabla f(x), y-x\rangle + \frac{M}{2} \|y-x\|_2^2$. 
+- $\forall x, y \in X$, we have that $f(y) \leq f(x) + \langle \nabla f(x), y-x\rangle + \frac{M}{2} \\|y-x\\|_2^2$. 
 	- This is saying that $f$ is below this quadratic approximation. 
-- $\| \nabla^2 f \| \leq M \iff MI \succeq \nabla^2 f$. 
+- $\\| \nabla^2 f \\| \leq M \iff MI \succeq \nabla^2 f$. 
 - [Here](https://xingyuzhou.org/blog/notes/Lipschitz-gradient) are some other equivalent notions of Lipschitz Smoothness. 
 
 > **Fact**: A function is strongly convex if and only if its [convex conjugate](http://en.wikipedia.org/wiki/Convex_conjugate) (a.k.a. Legendre-Fenchel transform) is Lipschitz smooth.
@@ -100,36 +103,36 @@ This connection highlights the fact that if $f$ is $M$-smooth and the step size 
 **Convergence Rate of GD.**
 
 **Theorem (Descent Lemma).** We claim that for sequence $\{ x_k \}$ generated by GD: 
-$f \; M$-smooth, convex, differentiable and $t \leq \frac{1}{M} \Longrightarrow f\left(x_{k+1}\right) \leq f\left(x_k\right)-\frac{t}{2}\left\|\nabla f\left(x_k\right)\right\|^2$
+$f \; M$-smooth, convex, differentiable and $t \leq \frac{1}{M} \Longrightarrow f\left(x_{k+1}\right) \leq f\left(x_k\right)-\frac{t}{2}\left\\|\nabla f\left(x_k\right)\right\\|^2$
 
 **Proof.** We start with $M$-smoothness, giving us: 
-$$f(x_{k+1}) \leq f(x_k) + \langle \nabla f(x_k), x_{k+1} - x_k \rangle + \frac{M}{2} \|x_{k+1} - x_k\|^2_2$$
+$$f(x_{k+1}) \leq f(x_k) + \langle \nabla f(x_k), x_{k+1} - x_k \rangle + \frac{M}{2} \\|x_{k+1} - x_k\\|^2_2$$
 For gradient descent, $x_{k+1} - x_k$ is equal to $t \nabla f(x_k)$. So we substitute: 
 
-$$\begin{align} f(x_{k+1}) &\leq f(x_k) + \langle \nabla f(x_k), -t \nabla f(x_k)\rangle + \frac{M}{2} \|t \nabla f(x_k)\|^2_2 \\ &= f(x_k) - t \|\nabla f(x_k)\|^2 + \frac{M}{2} t^2 \|\nabla f(x_k)\|^2 \\ &= f(x_k) - \left(1 - \frac{M}{2} t\right) t \|\nabla f(x_k)\|^2 \\ &\leq f(x_k) - \frac{t}{2} \|\nabla f(x_k)\|^2 \end{align}$$
+$$\begin{align} f(x_{k+1}) &\leq f(x_k) + \langle \nabla f(x_k), -t \nabla f(x_k)\rangle + \frac{M}{2} \\|t \nabla f(x_k)\\|^2_2 \\ &= f(x_k) - t \\|\nabla f(x_k)\\|^2 + \frac{M}{2} t^2 \\|\nabla f(x_k)\\|^2 \\ &= f(x_k) - \left(1 - \frac{M}{2} t\right) t \\|\nabla f(x_k)\\|^2 \\ &\leq f(x_k) - \frac{t}{2} \\|\nabla f(x_k)\\|^2 \end{align}$$
 
-where the second equality follows by the fact that $\|x\|_2^2 = \langle x, x\rangle$, and the last inequality follows from the fact that $t \leq \frac{1}{M}$. 
+where the second equality follows by the fact that $\\|x\\|_2^2 = \langle x, x\rangle$, and the last inequality follows from the fact that $t \leq \frac{1}{M}$. 
 
-**Convergence Rate Theorem**. We still assume $f$ convex, differentiable, $M$-smooth. We now want to show that $f(x^*) - f(x) \leq \frac{\|x^{(0)} - x^*\|_2^2}{2 \eta T}$. Call the RHS $\epsilon$. Then, $T = \|x^{(0)} - x^*\|_2^2 / 2 \eta \epsilon$. So, $T = O(1/\epsilon)$. 
+**Convergence Rate Theorem**. We still assume $f$ convex, differentiable, $M$-smooth. We now want to show that $f(x^*) - f(x) \leq \frac{\\|x^{(0)} - x^*\\|_2^2}{2 \eta T}$. Call the RHS $\epsilon$. Then, $T = \\|x^{(0)} - x^*\\|_2^2 / 2 \eta \epsilon$. So, $T = O(1/\epsilon)$. 
 
-**A useful trick.** $\|y+z\|^2 = \|y\|^2 + 2 \langle y, z \rangle + \|z\|^2$. (Completing the square)
+**A useful trick.** $\\|y+z\\|^2 = \\|y\\|^2 + 2 \langle y, z \rangle + \\|z\\|^2$. (Completing the square)
 
 This proof just uses convexity and $M$-smoothness of the function. Notice that 
 $$f \text{convex} \implies f(x^*) \geq f(x_k) + \left\langle \nabla f(x_k), x^*-x_k \right\rangle$$
 and that
-$$M\text{-Smooth} \Rightarrow \text{Descent Lemma} \Leftrightarrow f(x_{k+1}) \leq f(x_k) - \frac{t}{2} \| \nabla f(x_k) \|^2$$
+$$M\text{-Smooth} \Rightarrow \text{Descent Lemma} \Leftrightarrow f(x_{k+1}) \leq f(x_k) - \frac{t}{2} \\| \nabla f(x_k) \\|^2$$
 We can subtract the convexity FOC from the descent lemma to get: 
-$$f(x_{k+1}) - f(x^*) \leq - \frac{t}{2} \| \nabla f(x_k) \|^2 + \left\langle \nabla f(x_k), x_k - x^* \right\rangle$$
+$$f(x_{k+1}) - f(x^*) \leq - \frac{t}{2} \\| \nabla f(x_k) \\|^2 + \left\langle \nabla f(x_k), x_k - x^* \right\rangle$$
 where we turn $- \left\langle \nabla f(x_k), x^*-x_k \right\rangle = \left\langle \nabla f(x_k), x_k - x^* \right\rangle$. 
 
 > Notice that we subtract $C>D$ from $A<B$ to get $A-C < B-D$. Make sure this makes sense to you. 
 
 We can now rewrite the expression above by thinking about completing the square. 
 
-In particular, we notice that $\|\nabla f(x_k)\|^2$ looks like something we can write in a Complete-The-Square fashion, with something of the form $-\nabla f(x_k) + (x_k - x^*)$. Indeed, we can write the RHS of above as follows
-$$-\frac{1}{2t} \| -t\nabla f(x_k) + (x_k - x^*) \|^2 + \frac{1}{2t} \|x_k - x^*\|^2$$
+In particular, we notice that $\\|\nabla f(x_k)\\|^2$ looks like something we can write in a Complete-The-Square fashion, with something of the form $-\nabla f(x_k) + (x_k - x^*)$. Indeed, we can write the RHS of above as follows
+$$-\frac{1}{2t} \\| -t\nabla f(x_k) + (x_k - x^*) \\|^2 + \frac{1}{2t} \\|x_k - x^*\\|^2$$
 where $-t \nabla f(x_k) +x_k = x_{k+1}$. To bound the final distance $f(x_T) - f(x^*)$, we write:
-$$T \left( f(x_{T}) - f(x^*) \right) \leq \sum_{k=0}^{T-1} \left( f(x_{k+1}) - f^* \right) = \frac{1}{2t} \sum_{k=0}^{T-1} \left( \left\| x_k - x^* \right\|^2 - \left\| x_{k+1} - x^* \right\|^2 \right) = \frac{\|x_0 - x^*\|^2}{2t}$$
+$$T \left( f(x_{T}) - f(x^*) \right) \leq \sum_{k=0}^{T-1} \left( f(x_{k+1}) - f^* \right) = \frac{1}{2t} \sum_{k=0}^{T-1} \left( \left\\| x_k - x^* \right\\|^2 - \left\\| x_{k+1} - x^* \right\\|^2 \right) = \frac{\\|x_0 - x^*\\|^2}{2t}$$
 where we use a naive bound in the first inequality, but to Ali's knowledge, it can't get tighter ([Ed](https://edstem.org/us/courses/49375/discussion/4579194)). 
 
 ### Class 9. Subgradient Methods.
@@ -151,8 +154,8 @@ $$
 
 **Some geometric intuition.** Consider what the subgradients look like for the following:
 - $f: \mathbb{R} \to \mathbb{R}$ where $f(x) = |x|$ 
-- $f: \mathbb{R}^n \to \mathbb{R}$ where $f(x) = \|x\|_2$
-- $f: \mathbb{R}^n \to \mathbb{R}$ where $f(x) = \|x\|_1$ 
+- $f: \mathbb{R}^n \to \mathbb{R}$ where $f(x) = \\|x\\|_2$
+- $f: \mathbb{R}^n \to \mathbb{R}$ where $f(x) = \\|x\\|_1$ 
 - $f(x) = \max(f_1(x), f_2(x))$ for $f_1, f_2: \mathbb{R}^n \to \mathbb{R}$ convex, diff'able
 
 **Definition. Subdifferential.** The set of all subgradients is the subdifferential.
@@ -190,7 +193,7 @@ $$N_C(x) = \{ g \in \mathbb{R}^n \; : \; g^Tx \geq g^T y \; \text{for any } y \i
 
 This is effectively all vectors that can be used to construct a **supporting hyperplane** at this particular point (that is, the entire set is to one side of the boundary). 
 
-**Pf.** Since $a \cdot b = \|a\| \|b\| \cos(\theta)$, if $a \cdot b \geq 0$, then $\cos \theta \leq 0$, so $\theta \geq \pi/2$. All of this is to say that the normal cone at a point $x$ contains all vectors that have an angle $\geq$ 90 degrees w/ all vectors $y-x$, for $y \in C$. 
+**Pf.** Since $a \cdot b = \\|a\\| \\|b\\| \cos(\theta)$, if $a \cdot b \geq 0$, then $\cos \theta \leq 0$, so $\theta \geq \pi/2$. All of this is to say that the normal cone at a point $x$ contains all vectors that have an angle $\geq$ 90 degrees w/ all vectors $y-x$, for $y \in C$. 
 
 **Visual intuition.** Consider the convex set below, $\Omega$. Let $\bar{x}$ be at the origin; for any point $x \in \Omega$, we have that $x - \bar{x} = x$. Based on the picture, we can see that the cone defined by $N_\Omega(\bar{x})$ looks like the shaded region below. 
 
@@ -262,40 +265,40 @@ $$
 
 **Convergence of subgradient method.** Assume that $f$ is 
 
-**Thm.** If $f$ is $G$-Lipschitz, for all $g \in \partial f(x)$, $\|g\|_2 \leq G$. 
+**Thm.** If $f$ is $G$-Lipschitz, for all $g \in \partial f(x)$, $\\|g\\|_2 \leq G$. 
 
-**Pf.** Suppose $y = x+ g$. We then have that $G \|y-x\|_2 = G \|g \|_2 \geq | f(y)-f(x) |$. Since $f(y) \geq f(x) + \langle g, g \rangle$, $f(y) - f(x) \geq g^Tg$. It follows that $G \|g\|_2 \geq \|g\|_2^2 \implies \|g\|_2 \leq G$. 
+**Pf.** Suppose $y = x+ g$. We then have that $G \\|y-x\\|_2 = G \\|g \\|_2 \geq | f(y)-f(x) |$. Since $f(y) \geq f(x) + \langle g, g \rangle$, $f(y) - f(x) \geq g^Tg$. It follows that $G \\|g\\|_2 \geq \\|g\\|_2^2 \implies \\|g\\|_2 \leq G$. 
 
 **Moving forward,** we are going to prove the following two theorems. Suppose $f$ is convex, $\text{dom} f  = \mathbb{R}^n$, and $f$ is $G$-Lipschitz continuous: 
 - For fixed step size $t$, $\lim_{k \to \infty} f(x^{(k)}) \leq f^* + G^2 t/2$ 
 - For diminishing step sizes, $\lim_{k \to \infty} f(x^{(k)}) = f^*$ 
 
 **Law of Parallelogram**
-$$\| \mathbf{a} - \mathbf{b} \|_2^2 = \| \mathbf{a} \|_2^2 + \| \mathbf{b} \|_2^2 - 2\langle \mathbf{a}, \mathbf{b} \rangle$$
+$$\\| \mathbf{a} - \mathbf{b} \\|_2^2 = \\| \mathbf{a} \\|_2^2 + \\| \mathbf{b} \\|_2^2 - 2\langle \mathbf{a}, \mathbf{b} \rangle$$
 **Convergence Analysis**. A key inequality, which we state and then prove right below: 
 
 $$
-\begin{align} \| x^{(k)} - x^\ast \|_2^2 &\leq \| x^{(k-1)} - x^\ast \|_2^2 - 2t_k\left( f(x^{(k-1)}) - f(x^\ast) \right) + t_k^2 \| g^{(k-1)} \|_2^2 \\ &= \left\| x^{(k-1)} - t_k g^{(k-1)} - x^\ast \right\|_2^2 \quad \text{since $x^{(k)}=x^{(k-1)}-t_kg^{(k-1)}$ }\\ &= \left\| \left( x^{(k-1)} - x^\ast \right) - t_k g^{(k-1)} \right\|_2^2 \\ &= \| x^{(k-1)} - x^\ast \|_2^2 - 2 t_k (g^{(k-1)})^T (x^{(k-1)} - x^\ast)  + t_k^2 \| g^{(k-1)} \|_2^2
+\begin{align} \\| x^{(k)} - x^\ast \\|_2^2 &\leq \\| x^{(k-1)} - x^\ast \\|_2^2 - 2t_k\left( f(x^{(k-1)}) - f(x^\ast) \right) + t_k^2 \\| g^{(k-1)} \\|_2^2 \\ &= \left\\| x^{(k-1)} - t_k g^{(k-1)} - x^\ast \right\\|_2^2 \quad \text{since $x^{(k)}=x^{(k-1)}-t_kg^{(k-1)}$ }\\ &= \left\\| \left( x^{(k-1)} - x^\ast \right) - t_k g^{(k-1)} \right\\|_2^2 \\ &= \\| x^{(k-1)} - x^\ast \\|_2^2 - 2 t_k (g^{(k-1)})^T (x^{(k-1)} - x^\ast)  + t_k^2 \\| g^{(k-1)} \\|_2^2
 \end{align}
 $$
 
 for $g \in \partial f^{(k-1)}(x)$. Here, we've written out some math by the law of the parallelogram and expanding out $x^{(k)}$ by the algorithm step. Next, we use the defn of subgradient. 
 $$\begin{align}f(x^*) &\geq f(x^{(k-1)}) + (g^{(k-1)})^T (x^* - x^{(k-1)}) \\ (g^{(k-1)})^T (x^* - x^{(k-1)} ) &\leq f(x^*) - f(x^{(k-1)}) \end{align}$$
 Geometrically, all this is saying is. that "derivative x [x-diff] $\leq$ functional diff". Combining, we have that:
-$$\| x^{(k)} - x^* \|_2^2 \leq \| x^* - x^{(k-1)} \|_2^2 - 2t_k \left( f(x^{(k-1)}) - f(x^*) \right) + t_k^2 \| g^{(k-1)} \|_2^2$$
+$$\\| x^{(k)} - x^* \\|_2^2 \leq \\| x^* - x^{(k-1)} \\|_2^2 - 2t_k \left( f(x^{(k-1)}) - f(x^*) \right) + t_k^2 \\| g^{(k-1)} \\|_2^2$$
 
 **Finishing Up.** Finally, we finish up with similar flavor of proof as with gradient descent. In particular, invoke Lipschitz continuity and finish up. We can then apply the previous inequality $k-1$ times to get: 
 $$
-\begin{aligned} 0 & \leq \|x^{(k)} - x^*\|_2^2 \\ & \leq \|x^{(0)} - x^*\|_2^2 - 2 \sum_{i=1}^{k} t_i (f(x^{(i-1)}) - f(x^*)) + \sum_{i=1}^{k} 2 t_i^2 \|g^{(i-1)}\|_2^2 \\ \end{aligned}
+\begin{aligned} 0 & \leq \\|x^{(k)} - x^*\\|_2^2 \\ & \leq \\|x^{(0)} - x^*\\|_2^2 - 2 \sum_{i=1}^{k} t_i (f(x^{(i-1)}) - f(x^*)) + \sum_{i=1}^{k} 2 t_i^2 \\|g^{(i-1)}\\|_2^2 \\ \end{aligned}
 $$
 So it follows that:
-$$\begin{aligned} 2 \sum_{i=1}^{k} t_i (f(x^{(i-1)}) - f(x^*)) \leq \|x^{(0)} - x^*\|_2^2 + G^2 \sum_{i=1}^{k} t_i^2 \\ \textcolor{red}{\text{(Lip cont. } \Rightarrow \|g^{(i-1)}\|_2 \leq G\text{)}} \end{aligned}
+$$\begin{aligned} 2 \sum_{i=1}^{k} t_i (f(x^{(i-1)}) - f(x^*)) \leq \\|x^{(0)} - x^*\\|_2^2 + G^2 \sum_{i=1}^{k} t_i^2 \\ \textcolor{red}{\text{(Lip cont. } \Rightarrow \\|g^{(i-1)}\\|_2 \leq G\text{)}} \end{aligned}
 $$
 We now pull the same trick, where we say "hey the bound on the best at step $k$ is the min of $k$ steps so therefore I can rewrite the iteration-wise sum with one $k$ term!"
 $$\begin{aligned} f(x^{(k)}_{\text{best}}) & = \min_{i=1...k} f(x^{(i)}) \\ \sum_{i=1}^{k} t_i (f(x^{(i-1)}) - f(x^*)) & \geq (f(x^{(k)}_{\text{best}}) - f(x^*)) \sum_{i=1}^{k} t_i \end{aligned}$$
 And finally we have: 
-$$\begin{aligned} 2 \left( \sum_{i=1}^{k} t_i \right) (f(x^{(k)}_{\text{best}}) - f(x^*)) & \leq \|x^{(0)} - x^*\|_2^2 + G^2 \sum_{i=1}^{k} t_i^2 \\ f(x^{(k)}_{\text{best}}) - f(x^*) & \leq \frac{\|x^{(0)} - x^*\|_2^2}{2 \left( \sum_{i=1}^{k} t_i \right)} + \frac{G^2 \sum_{i=1}^{k} t_i^2}{2 \left( \sum_{i=1}^{k} t_i \right)} \end{aligned}$$
-If we call $\|x^{(0)} - x^*\|_2^2 = R$, then for a fixed step size the above is equal to $\frac{R^2 + kG^2t^2}{2kt}$. Otherwise if the step size is diminishing this approaches 0. This converges in $O(1/\epsilon^2)$ time. 
+$$\begin{aligned} 2 \left( \sum_{i=1}^{k} t_i \right) (f(x^{(k)}_{\text{best}}) - f(x^*)) & \leq \\|x^{(0)} - x^*\\|_2^2 + G^2 \sum_{i=1}^{k} t_i^2 \\ f(x^{(k)}_{\text{best}}) - f(x^*) & \leq \frac{\\|x^{(0)} - x^*\\|_2^2}{2 \left( \sum_{i=1}^{k} t_i \right)} + \frac{G^2 \sum_{i=1}^{k} t_i^2}{2 \left( \sum_{i=1}^{k} t_i \right)} \end{aligned}$$
+If we call $\\|x^{(0)} - x^*\\|_2^2 = R$, then for a fixed step size the above is equal to $\frac{R^2 + kG^2t^2}{2kt}$. Otherwise if the step size is diminishing this approaches 0. This converges in $O(1/\epsilon^2)$ time. 
 
 > [These](https://web.stanford.edu/class/ee364b/lectures/subgrad_method_notes.pdf) are a good set of notes on the subgradient method. Sections 1/2/3/6 are particularly nice. 
 
@@ -306,20 +309,20 @@ In this lecture, we analyze the **projected subgradient** and **proximal gradien
 So far, we've been looking at unconstrained problems. For constrained problems over some convex set $C$, we can use the projected subgradient method, where each iteration we project onto $C$ (equivalent to adding an indicator function $I(x \in C)$ into the unconstrained optimization problem). 
 1. $z^{(k)} = x^{(k-1)} - t_k g^{(k-1)}$
 2. $x^{(k)} = P_C(z^{(k)})$
-3. Here, $x^* \in C$, so it must be true that $\|x^{(k)} - x^*\|_2^2 \leq \|z^{(k)} - x^*\|_2^2$ so we'll get the same convergence result. 
+3. Here, $x^* \in C$, so it must be true that $\\|x^{(k)} - x^*\\|_2^2 \leq \\|z^{(k)} - x^*\\|_2^2$ so we'll get the same convergence result. 
 
 Some sets are easy to project onto, and some are hard, like affine images, solution sets to linear equations, nonnegative orthant, and some norm balls. The subgradient method for solving this constrained => unconstrained approach is very generic. 
 
 **Composite Functions.** If $f = g+ h$ and both are convex but $h$ is nondifferentiable, is there anything faster than the subgradient method? 
 
 **One naive way** of approaching this is just to do a quadratic approximation for $g$ and leave $h$ alone. 
-$$\begin{aligned} x^{+} &= \text{argmin}_{z} \tilde{g}_t(z) + h(z) \\ &= \text{argmin}_{z} g(x) + \nabla g(x)^{T}(z - x) + \frac{1}{2t}\|z - x\|^2 + h(z) \\ &= \text{argmin}_{z} \frac{1}{2t}\|z - (x - t\nabla g(x))\|^2 + h(z) \end{aligned}$$
+$$\begin{aligned} x^{+} &= \text{argmin}_{z} \tilde{g}_t(z) + h(z) \\ &= \text{argmin}_{z} g(x) + \nabla g(x)^{T}(z - x) + \frac{1}{2t}\\|z - x\\|^2 + h(z) \\ &= \text{argmin}_{z} \frac{1}{2t}\\|z - (x - t\nabla g(x))\\|^2 + h(z) \end{aligned}$$
 where the final equality follows because the final squared term in the expansion there doesn't depend on $z$. Note that this pops out the next gradient descent update! [TODO: flesh out a few more lines of math here]
 
 So effectively we could minimize this expression by doing a gradient update for $z$ on $g$! This motivates the following algorithm: 
 
 $$
-\operatorname{prox}_{h, t}(x)=\underset{z}{\operatorname{argmin}} \frac{1}{2 t}\|x-z\|_2^2+h(z)
+\operatorname{prox}_{h, t}(x)=\underset{z}{\operatorname{argmin}} \frac{1}{2 t}\\|x-z\\|_2^2+h(z)
 $$
 
 Proximal gradient descent: choose initialize $x^{(0)}$, repeat:
